@@ -48,7 +48,7 @@ volatile int input[6];
 
 long s[6];  //distance variables
 
-volatile uint8_t counter=0; //counter used for keeping a track of when the sensor cycle is complete
+volatile uint8_t counter=6; //counter used for keeping a track of when the sensor cycle is complete
 
 void setup()
 {
@@ -91,7 +91,7 @@ ISR(PCINT0_vect)          //interrupt servie routine
   {
     last_channel[0]=0;                              
     input[0]=timer[0]-timer[1];                        //calculate time difference between when all were pinged and when 8th pin fell LOW
-    counter++;
+    counter++;                    //increase counter by 1
   }
 
   //pin 9 
