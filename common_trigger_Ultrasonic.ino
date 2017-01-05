@@ -103,7 +103,7 @@ ISR(PCINT0_vect)          //interrupt servie routine
   }
 
   //pin 10  
-  else if(last_channel[2]==1 && !(PINB & B00000011))
+  else if(last_channel[2]==1 && !(PINB & B00000100))
   {
     last_channel[2]=0;
     input[2]=timer[0]-timer[3];
@@ -111,7 +111,7 @@ ISR(PCINT0_vect)          //interrupt servie routine
   }
 
   //pin 11
-  else if(last_channel[3]==1 && !(PINB & B00000100))
+  else if(last_channel[3]==1 && !(PINB & B00001000))
   {
     last_channel[3]=0;
     input[3]=timer[0]-timer[4];
@@ -119,7 +119,7 @@ ISR(PCINT0_vect)          //interrupt servie routine
   }
 
   //pin 12 
-  else if(last_channel[4]==1 && !(PINB & B00000101))
+  else if(last_channel[4]==1 && !(PINB & B00010000))
   {
     last_channel[4]=0;
     input[4]=timer[0]-timer[5];
@@ -127,7 +127,7 @@ ISR(PCINT0_vect)          //interrupt servie routine
   }
 
   //pin 13 
-  else if(last_channel[5]==1 && !(PINB & B00000110))
+  else if(last_channel[5]==1 && !(PINB & B00100000))
   {
     last_channel[5]=0;
     input[5]=timer[0]-timer[6];
