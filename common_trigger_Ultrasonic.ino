@@ -13,7 +13,7 @@ New ping method(interrupts)
 This method uses interrupts to measure the round trip time. The advantage is that unlike in
 the case of pulseIn method, here the microcontroller is not stuck waiting for the pin to 
 fall LOW and can use the time in between to do some processing. 
-The disadvantage however is that although the "Hardware" no longer controlling the cycle time, 
+The disadvantage however is that although the "Hardware" is no longer controlling the cycle time, 
 the update rate on the ultrasonic sensors is still the same as the pulseIn method 
 (you ping one sensor first and ping the second one only when the first one's pin falls low, ).
 So for example if you have 3 sensors, worst case scenario, if there is no obstacle, 
@@ -25,9 +25,9 @@ hence, worst case scenario, we get 29 ms of total update time(Actually a little 
 that because if all of them fall LOW at 29 ms then they will be noticed in the ascending order from 8 to 13)
 and we get all the advantages of new ping method(can process data while the ultrasonic waves are coming back)
 The one disadvantage(which i can think of off the top of my head) is that the ultrasonic sensors have to be 
-oriented appropriately such that any 2 ultrasonics do not notice each other's reflected wave.
+oriented appropriately such that no 2 ultrasonics notice each other's reflected wave.
 
-This particular example uses pins 8-13 (B port) (PCIE0) but is expandable. 
+This particular example uses pins 8-12 (B port) (PCIE0) but is expandable. 
 
 To ensure that we dont ping the sensors again before an entire cycle is done,
 I have put a counter variable that observes how many sensors have given 
@@ -36,19 +36,19 @@ an answer so far.
 */
 
 
-#define sensor 6 //number of sensors
+#define sensor 5 //number of sensors
 
 //variables for doing the interrupt stuff
-volatile unsigned long timer[7];
-byte last_channel[6];
-volatile int input[6];  
+volatile unsigned long timer[6];
+byte last_channel[5];
+volatile int input[5];  
 
 
 #define TRIG 6  //common trigger pin 
 
 long s[6];  //distance variables
 
-volatile uint8_t counter=6; //counter used for keeping a track of when the sensor cycle is complete
+volatile uint8_t counter=5; //counter used for keeping a track of when the sensor cycle is complete
 
 void setup()
 {
@@ -58,7 +58,6 @@ void setup()
   PCMSK0 |= (1 << PCINT2); //10
   PCMSK0 |= (1 << PCINT3); //11
   PCMSK0 |= (1 << PCINT4); //12
-  PCMSK0 |= (1 << PCINT5); //13
   Serial.begin(38400);
   pinMode(TRIG,OUTPUT); 
 }
@@ -74,14 +73,12 @@ ISR(PCINT0_vect)          //interrupt servie routine
     last_channel[2]=1;
     last_channel[3]=1;
     last_channel[4]=1;
-    last_channel[5]=1;
     
     timer[1]=timer[0];          
     timer[2]=timer[0];
     timer[3]=timer[0];
     timer[4]=timer[0];
     timer[5]=timer[0];
-    timer[6]=timer[0];
 
     counter=0;               //initiate counter at 0 ,as each pin falls low, the counter increases. this is done so that we dont ping the sensors before all of them are done
   }
@@ -123,14 +120,6 @@ ISR(PCINT0_vect)          //interrupt servie routine
   {
     last_channel[4]=0;
     input[4]=timer[0]-timer[5];
-    counter++;
-  }
-
-  //pin 13 
-  else if(last_channel[5]==1 && !(PINB & B00100000))
-  {
-    last_channel[5]=0;
-    input[5]=timer[0]-timer[6];
     counter++;
   }
 }
